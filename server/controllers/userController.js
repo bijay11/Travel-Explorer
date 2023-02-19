@@ -1,3 +1,8 @@
+exports.checkID = (req, res, next, val) => {
+  // placeholder for the validation
+  next();
+};
+
 exports.getAllUsers = (req, res) => {
   res.status(500).json({
     status: 'error',
