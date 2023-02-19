@@ -8,7 +8,7 @@ const app = express();
 // Middlewares start here
 //
 // get server logs
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 
 // built in middlware - parses incoming JSON requests and puts the parsed data in req.body
 app.use(express.json());
