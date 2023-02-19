@@ -1,15 +1,21 @@
-const express = require('express');
 const fs = require('fs');
+const express = require('express');
+const morgan = require('morgan');
 
 const app = express();
 
+// Middlwares start here
+app.use(morgan('dev'));
+
 // built in middlware - parses incoming JSON requests and puts the parsed data in req.body
 app.use(express.json());
+// Middlwares ends here
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
+// Route Handlers start here
 const getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',
@@ -93,14 +99,18 @@ const deleteTour = (req, res) => {
     data: null,
   });
 };
+// Route Handlers end here
 
+// Routes starts here
 app.route('/api/v1/tours').get(getAllTours).post(createTour);
 app
   .route('/api/v1/tours/:id')
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour);
+// Routes ends here
 
+// Start Server
 const port = 3000;
 
 app.listen(port, () => {
