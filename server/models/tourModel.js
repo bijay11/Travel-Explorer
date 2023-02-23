@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const tourSchema = new mongoose.Schema(
   {
+    slug: String,
     name: {
       type: String,
       required: [true, 'A tour must have a name'],
@@ -66,6 +68,23 @@ const tourSchema = new mongoose.Schema(
 tourSchema.virtual('durationWeeks').get(function () {
   return +(this.duration / 7).toFixed(2);
 });
+
+// DOCUMENT MIDDLWARE: runs only before .save() and .create()
+tourSchema.pre('save', function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+// tourSchema.pre('save', (next) => {
+//   console.log('Will save document...');
+//   next();
+// });
+
+// post middleware are executed after the hooked method and all of its pre middleware have completed.Thus, no access to this
+// tourSchema.post('save', (doc, next) => {
+//   console.log(doc);
+//   next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
 
