@@ -20,6 +20,13 @@ app.use('/api/v1/tours', tourRouter);
 
 // for /api/v1/users route, apply userRouter middleware
 app.use('/api/v1/users', userRouter);
+
+app.all('*', (req, res) => {
+  res.status(404).json({
+    status: 'fail',
+    message: `Can't find ${req.originalUrl} on this server.`,
+  });
+});
 //
 // Middlewares end here
 
