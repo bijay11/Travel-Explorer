@@ -109,6 +109,16 @@ tourSchema.post(/^find/, function (docs, next) {
   next();
 });
 
+// AGGREGATION MIDDLEWARE
+// we could have added the match to filter out in each route
+// but its better to handle through middleware
+tourSchema.pre('aggregate', function (next) {
+  console.log('test this', this);
+  this.pipeline().unshift({
+    $match: { secretTour: { $ne: true } },
+  });
+  next();
+});
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour;
