@@ -55,6 +55,10 @@ const tourSchema = new mongoose.Schema(
       select: false,
     },
     startDates: [Date],
+    secretTour: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: {
@@ -85,6 +89,25 @@ tourSchema.pre('save', function (next) {
 //   console.log(doc);
 //   next();
 // });
+
+// QUERY MIDDLEWARE:
+
+// if we only use find, then this will not work for findOne and so on
+// so use Regex to find all the query that starts with find.
+tourSchema.pre(/^find/, function (next) {
+  // this here now is a query object
+  this.find({ secretTour: { $ne: true } });
+
+  this.start = Date.now();
+  next();
+});
+
+tourSchema.post(/^find/, function (docs, next) {
+  // find out the time it took to get the data
+  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+
+  next();
+});
 
 const Tour = mongoose.model('Tour', tourSchema);
 
