@@ -1,6 +1,7 @@
 const Tour = require('../models/tourModel');
 const apiFilters = require('../helpers/apiFeatures');
 const catchAsyncError = require('../helpers/catchAsyncError');
+const AppError = require('../helpers/appError');
 
 exports.aliasTopTours = async (req, res, next) => {
   req.query.limit = '5';
@@ -25,6 +26,7 @@ exports.getAllTours = catchAsyncError(async (req, res, next) => {
   query = paginateData(query, req.query.page, req.query.limit);
 
   const tours = await query;
+
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -36,9 +38,11 @@ exports.getAllTours = catchAsyncError(async (req, res, next) => {
 exports.getTour = catchAsyncError(async (req, res, next) => {
   const tourId = req.params.id;
   const tour = await Tour.findById(tourId);
-
   // This below will provide the foundTour inside array
   // const tour = await Tour.find({ _id: tourId });
+
+  // if argument is provided in next function, express assumes it as error.
+  if (!tour) return next(new AppError('No tour found with provided ID', 404));
 
   res.status(200).json({
     status: 'success',
@@ -63,22 +67,26 @@ exports.createTour = catchAsyncError(async (req, res, next) => {
 exports.updateTour = catchAsyncError(async (req, res, next) => {
   const tourId = req.params.id;
   const newTour = req.body;
-  const updatedTour = await Tour.findByIdAndUpdate(tourId, newTour, {
+  const tour = await Tour.findByIdAndUpdate(tourId, newTour, {
     new: true,
     runValidators: true,
   });
 
+  if (!tour) return next(new AppError('No tour found with provided ID', 404));
+
   res.status(200).json({
     status: 'success',
     data: {
-      tour: updatedTour,
+      tour,
     },
   });
 });
 
 exports.deleteTour = catchAsyncError(async (req, res, next) => {
   const tourId = req.params.id;
-  await Tour.findByIdAndDelete(tourId);
+  const tour = await Tour.findByIdAndDelete(tourId);
+
+  if (!tour) return next(new AppError('No tour found with provided ID', 404));
 
   res.status(204).json({
     status: 'success',
