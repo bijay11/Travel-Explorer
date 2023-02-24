@@ -1,5 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
+
+const AppError = require('./helpers/appError');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 
@@ -21,15 +23,12 @@ app.use('/api/v1/tours', tourRouter);
 // for /api/v1/users route, apply userRouter middleware
 app.use('/api/v1/users', userRouter);
 
+// unhandled routes
 app.all('*', (req, res, next) => {
-  const err = new Error(`Can't find ${req.originalUrl} on this server.`);
-  err.status = 'fail';
-  err.statusCode = 404;
-
   // If next function receives an argument, then express assumes there was an error
   // even if there are middlewares between this and the error middleware handler
   // it skips all the in-between middlwares
-  next(err);
+  next(new AppError(`Can't find ${req.originalUrl} on this server.`, 404));
 });
 
 // In Express, error handling middleware are middleware functions that accept four arguments:
