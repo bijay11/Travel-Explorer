@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const AppError = require('./helpers/appError');
-const globalErrorHandler = require('./controllers/errorController');
+const errorController = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 
@@ -33,7 +33,7 @@ app.all('*', (req, res, next) => {
 });
 
 // In Express, error handling middleware are middleware functions that accept four arguments
-app.use(globalErrorHandler);
+app.use(errorController);
 //
 // Middlewares end here
 

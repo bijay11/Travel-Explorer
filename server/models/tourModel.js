@@ -98,13 +98,11 @@ tourSchema.pre('save', function (next) {
 });
 
 // tourSchema.pre('save', (next) => {
-//   console.log('Will save document...');
 //   next();
 // });
 
 // post middleware are executed after the hooked method and all of its pre middleware have completed.Thus, no access to this
 // tourSchema.post('save', (doc, next) => {
-//   console.log(doc);
 //   next();
 // });
 
@@ -131,7 +129,6 @@ tourSchema.post(/^find/, function (docs, next) {
 // we could have added the match to filter out in each route
 // but its better to handle through middleware
 tourSchema.pre('aggregate', function (next) {
-  console.log('test this', this);
   this.pipeline().unshift({
     $match: { secretTour: { $ne: true } },
   });
