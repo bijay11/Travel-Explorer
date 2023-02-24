@@ -5,6 +5,11 @@ const handleCastErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
+const handleDuplicateFieldsDB = ({ keyValue: { name } }) => {
+  const message = `Duplicate field value: "${name}". Please use another value.`;
+  return new AppError(message, 400);
+};
+
 const sendErrorForDev = (err, res) => {
   return res.status(err.statusCode).json({
     status: err.status,
@@ -41,12 +46,11 @@ module.exports = (err, req, res, next) => {
   }
 
   // change mongoDB error to operations if the error name is castError.
-
   let error = JSON.stringify(err);
   error = JSON.parse(error);
 
-  if (error.name === 'CastError') {
-    error = handleCastErrorDB(error);
-  }
+  if (error.name === 'CastError') error = handleCastErrorDB(error);
+  if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+
   return sendErrorForProd(error, res);
 };
