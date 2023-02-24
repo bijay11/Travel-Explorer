@@ -1,3 +1,10 @@
+const AppError = require('../helpers/appError');
+
+const handleCastErrorDB = (err) => {
+  const message = `Invalid ${err.path}: ${err.value}`;
+  return new AppError(message, 400);
+};
+
 const sendErrorForDev = (err, res) => {
   return res.status(err.statusCode).json({
     status: err.status,
@@ -17,7 +24,6 @@ const sendErrorForProd = (err, res) => {
   }
 
   // Programming or other unknown error - so do not leak error details..
-  console.error('Error', err);
 
   // Send Generic error message
   return res.status(500).json({
@@ -33,5 +39,14 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     return sendErrorForDev(err, res);
   }
-  return sendErrorForProd(err, res);
+
+  // change mongoDB error to operations if the error name is castError.
+
+  let error = JSON.stringify(err);
+  error = JSON.parse(error);
+
+  if (error.name === 'CastError') {
+    error = handleCastErrorDB(error);
+  }
+  return sendErrorForProd(error, res);
 };
