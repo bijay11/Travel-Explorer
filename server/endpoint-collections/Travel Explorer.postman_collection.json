@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e38e86aa-274b-4bd5-ab07-bfc7828f69a5",
+		"_postman_id": "42b14c23-8836-41aa-987e-f9284f157a12",
 		"name": "Travel Explorer",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "19569945"
@@ -12,15 +12,23 @@
 				{
 					"name": "Get All Tours",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/v1/tours",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/tours",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -82,12 +90,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/api/v1/tours",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/tours",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -115,12 +121,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/api/v1/tours/2",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/tours/2",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -146,12 +150,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/api/v1/tours/63f38a31f999e3c0de99ff23",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/tours/63f38a31f999e3c0de99ff23",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -177,12 +179,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/api/v1/tours/7",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/tours/7",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -199,12 +199,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/v1/tours/top-5-cheap",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/tours/top-5-cheap",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -221,12 +219,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/v1/tours/tour-stats",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/tours/tour-stats",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -243,12 +239,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/v1/tours/monthly-plan/2021",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/tours/monthly-plan/2021",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -271,12 +265,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/v1/users",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/users",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -292,12 +284,10 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/v1/users",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/users",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -313,12 +303,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/v1/users/2",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/users/2",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -335,12 +323,10 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/v1/users/2",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/users/2",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
@@ -357,17 +343,101 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/api/v1/users/2",
-							"protocol": "http",
+							"raw": "{{URL}}/api/v1/users/2",
 							"host": [
-								"localhost"
+								"{{URL}}"
 							],
-							"port": "8000",
 							"path": [
 								"api",
 								"v1",
 								"users",
 								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign Up",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"test 1\",\r\n    \"email\":\"test1@gmail.com\",\r\n    \"password\": \"testing123\",\r\n    \"passwordConfirm\": \"testing123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/users/signup",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LogIn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer 546546156",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\": \"testing123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/users/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"login"
 							]
 						}
 					},
