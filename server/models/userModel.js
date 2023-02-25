@@ -23,6 +23,7 @@ const userSchema = new Schema({
     type: String,
     minLength: 8,
     required: [true, 'Please provide a password'],
+    select: false,
   },
   passwordConfirm: {
     type: String,
@@ -37,6 +38,7 @@ const userSchema = new Schema({
   },
 });
 
+// this will run after the data is received from the client and before it is saved in DB
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
@@ -47,6 +49,14 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined;
   next();
 });
+
+userSchema.methods.correctPassword = async function (
+  reqBodyPassword,
+  userPassword
+) {
+  // this.password in this case won't work since we have set select to false in schema
+  return await bcrypt.compare(reqBodyPassword, userPassword);
+};
 
 User = model('User', userSchema);
 
