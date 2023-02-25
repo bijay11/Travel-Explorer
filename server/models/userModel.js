@@ -36,6 +36,7 @@ const userSchema = new Schema({
       message: "Passwords doesn't match",
     },
   },
+  passwordChangedAt: Date,
 });
 
 // this will run after the data is received from the client and before it is saved in DB
@@ -56,6 +57,19 @@ userSchema.methods.correctPassword = async function (
 ) {
   // this.password in this case won't work since we have set select to false in schema
   return await bcrypt.compare(reqBodyPassword, userPassword);
+};
+
+userSchema.methods.passwordChangedAfter = async function (JWTtimeStamp) {
+  if (this.passwordChangedAt) {
+    const changedTimeStamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+
+    return changedTimeStamp > JWTtimeStamp;
+  }
+
+  return false;
 };
 
 User = model('User', userSchema);
