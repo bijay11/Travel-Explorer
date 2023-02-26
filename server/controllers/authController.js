@@ -1,8 +1,10 @@
+const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsyncError = require('../helpers/catchAsyncError');
 const AppError = require('../helpers/appError');
+const sendEmail = require('../helpers/email');
 
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
@@ -133,6 +135,35 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 
   // deactivate all validators from schema
   await user.save({ validateBeforeSave: false });
+
+  // send it to user's email
+  const resetURL = `${req.protocol}://${req.get(
+    'host'
+  )}/api/v1/users/resetPassword/${resetToken}`;
+
+  const message = `Forgot your password? Submit a request to get your new password to: ${resetURL}.\nIf you didn't forget your password, please ignore this email.`;
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Your password reset token (valid for 10 min)',
+      message,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Token sent to your email',
+    });
+  } catch (error) {
+    user.passwordResetToken = undefined;
+    user.passwordResetExpiresOn = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(
+      new AppError(
+        'There was an error sending the email. Please try again later.',
+        500
+      )
+    );
+  }
 });
 
 exports.resetPassword = catchAsyncError(async (req, res, next) => {});
