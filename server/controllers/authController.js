@@ -14,10 +14,23 @@ const signToken = (id) => {
   });
 };
 
+createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
 exports.signup = catchAsyncError(async (req, res, next) => {
   // just filter what is required to signIn from req.body
   const { name, email, password, passwordConfirm, passwordChangedAt } =
     req.body;
+
   const newUser = await User.create({
     name,
     email,
@@ -26,15 +39,7 @@ exports.signup = catchAsyncError(async (req, res, next) => {
     passwordChangedAt,
   });
 
-  const token = signToken(newUser._id);
-
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: {
-      user: newUser,
-    },
-  });
+  createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsyncError(async (req, res, next) => {
@@ -53,11 +58,7 @@ exports.login = catchAsyncError(async (req, res, next) => {
   }
 
   // If everything is fine, send token to the client
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(user, 200, res);
 });
 
 exports.protect = catchAsyncError(async (req, res, next) => {
@@ -192,11 +193,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   await user.save();
 
   // Log the user in, send JWT
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(user, 200, res);
 });
 
 exports.updatePassword = catchAsyncError(async (req, res, next) => {
@@ -207,9 +204,11 @@ exports.updatePassword = catchAsyncError(async (req, res, next) => {
   if (!user) return next(new AppError('User not found', 404));
 
   // check if posted current password is correct
-  const currentPassword = req.body.passwordConfirm;
+  const currentPassword = req.body.passwordCurrent;
   const newPassword = req.body.password;
-  if (!currentPassword || !newPassword)
+  const confirmNewPassword = req.body.passwordConfirm;
+
+  if (!currentPassword || !newPassword || !confirmNewPassword)
     return next(new AppError('Password provide old and new password', 400));
 
   //if it is correct, update password
@@ -219,18 +218,14 @@ exports.updatePassword = catchAsyncError(async (req, res, next) => {
   );
 
   if (!isPasswordMatch)
-    return next(new AppError("Password doesn't match", 401));
+    return next(new AppError('Your password is incorrect', 401));
 
   // at this point, user is validated, password also matched.
   // update the password to new password and save
   user.password = newPassword;
-  user.passwordConfirm = newPassword;
+  user.passwordConfirm = confirmNewPassword;
   await user.save();
 
   // Log the user in, send JWT
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createSendToken(user, 200, res);
 });
