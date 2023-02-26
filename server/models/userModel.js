@@ -59,6 +59,18 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  const oneSecond = 1000;
+
+  // make the password change time 1 second before
+  // so that it won't be before JWT signed time.
+  this.passwordChangedAt = Date.now() - oneSecond;
+
+  next();
+});
+
 userSchema.methods.correctPassword = async function (
   reqBodyPassword,
   userPassword
