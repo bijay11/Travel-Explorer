@@ -167,11 +167,21 @@
 				{
 					"name": "Delete Tour",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"Test Tour\",\r\n    \"duration\": 10,\r\n    \"difficulty\": \"easy\"\r\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -179,7 +189,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{URL}}/api/v1/tours/7",
+							"raw": "{{URL}}/api/v1/tours/63f38a31f999e3c0de99ff2b",
 							"host": [
 								"{{URL}}"
 							],
@@ -187,7 +197,7 @@
 								"api",
 								"v1",
 								"tours",
-								"7"
+								"63f38a31f999e3c0de99ff2b"
 							]
 						}
 					},
@@ -356,7 +366,12 @@
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
 				{
 					"name": "Sign Up",
 					"event": [
@@ -438,6 +453,67 @@
 								"v1",
 								"users",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\": \"test1@gmail.com\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/users/forgotPassword",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"forgotPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwt\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/users/resetPassword/32323",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"resetPassword",
+								"32323"
 							]
 						}
 					},
