@@ -198,3 +198,39 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
     token,
   });
 });
+
+exports.updatePassword = catchAsyncError(async (req, res, next) => {
+  // get user from the collection
+
+  const user = await User.findById(req.user.id).select('+password');
+
+  if (!user) return next(new AppError('User not found', 404));
+
+  // check if posted current password is correct
+  const currentPassword = req.body.passwordConfirm;
+  const newPassword = req.body.password;
+  if (!currentPassword || !newPassword)
+    return next(new AppError('Password provide old and new password', 400));
+
+  //if it is correct, update password
+  const isPasswordMatch = await user.correctPassword(
+    currentPassword,
+    user.password
+  );
+
+  if (!isPasswordMatch)
+    return next(new AppError("Password doesn't match", 401));
+
+  // at this point, user is validated, password also matched.
+  // update the password to new password and save
+  user.password = newPassword;
+  user.passwordConfirm = newPassword;
+  await user.save();
+
+  // Log the user in, send JWT
+  const token = signToken(user._id);
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
+});
