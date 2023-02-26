@@ -117,3 +117,22 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+exports.forgotPassword = catchAsyncError(async (req, res, next) => {
+  const { email } = req.body;
+
+  if (!email) return next(new AppError('Email is required', 400));
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return next(new AppError('No User found with the email address', 404));
+  }
+
+  const resetToken = user.createPasswordResetToken();
+
+  // deactivate all validators from schema
+  await user.save({ validateBeforeSave: false });
+});
+
+exports.resetPassword = catchAsyncError(async (req, res, next) => {});

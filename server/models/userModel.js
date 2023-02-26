@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -42,6 +43,8 @@ const userSchema = new Schema({
     },
   },
   passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetExpiresOn: Date,
 });
 
 // this will run after the data is received from the client and before it is saved in DB
@@ -75,6 +78,21 @@ userSchema.methods.passwordChangedAfter = async function (JWTtimeStamp) {
   }
 
   return false;
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  const timeInMs = 10 * 60 * 1000;
+
+  this.passwordResetExpiresOn = Date.now() + timeInMs;
+
+  return resetToken;
 };
 
 User = model('User', userSchema);
