@@ -123,7 +123,7 @@ exports.getTourStats = catchAsyncError(async (req, res, next) => {
   });
 });
 
-exports.getMondthyPlan = catchAsyncError(async (req, res, next) => {
+exports.getMonthyPlan = catchAsyncError(async (req, res, next) => {
   const year = +req.params.year;
 
   const plan = await Tour.aggregate([
