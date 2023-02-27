@@ -51,6 +51,15 @@ exports.updateMe = catchAsyncError(async (req, res, next) => {
   });
 });
 
+exports.deleteMe = catchAsyncError(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user._id, { activeUser: false });
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
+
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'error',
@@ -64,12 +73,14 @@ exports.getUser = (req, res) => {
     message: 'This route is not yet defined',
   });
 };
+
 exports.updateUser = (req, res) => {
   res.status(500).json({
     status: 'error',
     message: 'This route is not yet defined',
   });
 };
+
 exports.deleteUser = (req, res) => {
   res.status(500).json({
     status: 'error',

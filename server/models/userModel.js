@@ -45,6 +45,11 @@ const userSchema = new Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpiresOn: Date,
+  activeUser: {
+    type: Boolean,
+    default: true,
+    select: false,
+  },
 });
 
 // this will run after the data is received from the client and before it is saved in DB
@@ -68,6 +73,12 @@ userSchema.pre('save', function (next) {
   // so that it won't be before JWT signed time.
   this.passwordChangedAt = Date.now() - oneSecond;
 
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  // this points to the current query
+  this.find({ activeUser: { $ne: false } });
   next();
 });
 
