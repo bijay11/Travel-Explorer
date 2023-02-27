@@ -4,7 +4,7 @@ const path = require("path");
 
 // On build, webpack takes ./src/main.js and generate bundle.js file in ./dist directory
 module.exports = {
-  entry: "./src/main.js",
+  entry: "./src/Index.tsx",
   output: {
     path: path.resolve(__dirname, "./dist"),
     filename: "bundle.js",
@@ -19,7 +19,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js)x?$/,
+        test: /\.(js|ts)x?$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -29,6 +29,6 @@ module.exports = {
   },
   resolve: {
     // this will make import easy like import App from "./App"; instead of import App from "./App.jsx";
-    extensions: [".jsx", ".js"],
+    extensions: [".tsx", ".ts", ".jsx", ".js"],
   },
 };
