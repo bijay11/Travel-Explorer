@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 
 const AppError = require('./helpers/appError');
 const errorController = require('./controllers/errorController');
@@ -12,6 +13,16 @@ const app = express();
 //
 // get server logs
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
+
+const limiter = rateLimit({
+  max: 100,
+
+  // 1 hour in miliseconds
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP. Please try again in an hour.',
+});
+
+app.use('/api', limiter);
 
 // built in middlware - parses incoming JSON requests and puts the parsed data in req.body
 app.use(express.json());
