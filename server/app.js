@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const helment = require('helmet');
 
 const AppError = require('./helpers/appError');
 const errorController = require('./controllers/errorController');
@@ -11,9 +12,13 @@ const app = express();
 
 // Middlewares start here
 //
-// get server logs
+// set Security HTTP headers
+app.use(helment());
+
+// get server logs for development
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 
+// set limit request from the same API/IP
 const limiter = rateLimit({
   max: 100,
 
@@ -24,8 +29,16 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
-// built in middlware - parses incoming JSON requests and puts the parsed data in req.body
-app.use(express.json());
+// built in middlware - reads data from body into req.body
+app.use(
+  express.json({
+    // limit response body size
+    limit: '10kb',
+  })
+);
+
+// Serve static files
+app.use(express.static(`${__dirname}/public`));
 
 // mount the routers
 //
