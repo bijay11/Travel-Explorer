@@ -6,7 +6,8 @@ const catchAsyncError = require('../helpers/catchAsyncError');
 const AppError = require('../helpers/appError');
 const sendEmail = require('../helpers/email');
 
-const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
+const { JWT_SECRET, JWT_EXPIRES_IN, JWT_COOKIE_EXPIRES_IN, NODE_ENV } =
+  process.env;
 
 const signToken = (id) => {
   return jwt.sign({ id }, JWT_SECRET, {
@@ -16,6 +17,18 @@ const signToken = (id) => {
 
 createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
+
+  const cookieOptions = {
+    expires: new Date(Date.now() + JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+  };
+
+  if (NODE_ENV === 'production') cookieOptions.secure = true;
+
+  res.cookie('jwt', token, cookieOptions);
+
+  // remove password from output
+  user.password = undefined;
 
   res.status(statusCode).json({
     status: 'success',
