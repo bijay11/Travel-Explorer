@@ -1,0 +1,4 @@
+// this will add react transpilation process to webpack bundle process
+{
+  "presets": ["@babel/preset-react"]
+}
