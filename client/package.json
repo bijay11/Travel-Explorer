@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack serve",
+    "dev": "webpack serve --open",
     "build": "webpack --mode production --progress --hide-modules",
     "ts-check": "tsc -w"
   },
