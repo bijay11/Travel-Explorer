@@ -28,6 +28,7 @@ module.exports = {
     ],
   },
   resolve: {
+    // this will make import easy like import App from "./App"; instead of import App from "./App.jsx";
     extensions: [".jsx", ".js"],
   },
 };
