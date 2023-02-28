@@ -77,6 +77,33 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
+    // Geospatial data
+    startLocation: {
+      // GeoJSON
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        // GeoJSON
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],
   },
   {
     toJSON: {
@@ -87,6 +114,7 @@ const tourSchema = new mongoose.Schema(
     },
   }
 );
+
 tourSchema.virtual('durationWeeks').get(function () {
   return +(this.duration / 7).toFixed(2);
 });
