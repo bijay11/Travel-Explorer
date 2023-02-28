@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const User = require('./userModel');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -104,6 +105,8 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+    // Embedding guides
+    guides: Array,
   },
   {
     toJSON: {
@@ -119,9 +122,16 @@ tourSchema.virtual('durationWeeks').get(function () {
   return +(this.duration / 7).toFixed(2);
 });
 
+/** Pre validation starts here */
 // DOCUMENT MIDDLWARE: runs only before .save() and .create()
 tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
+tourSchema.pre('save', async function (next) {
+  const guidesPromises = this.guides.map(async (id) => await User.findById(id));
+  this.guides = await Promise.all(guidesPromises);
   next();
 });
 
@@ -146,13 +156,6 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
-tourSchema.post(/^find/, function (docs, next) {
-  // find out the time it took to get the data
-  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
-
-  next();
-});
-
 // AGGREGATION MIDDLEWARE
 // we could have added the match to filter out in each route
 // but its better to handle through middleware
@@ -162,6 +165,16 @@ tourSchema.pre('aggregate', function (next) {
   });
   next();
 });
+
+/** Pre validation ends here */
+
+tourSchema.post(/^find/, function (docs, next) {
+  // find out the time it took to get the data
+  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+
+  next();
+});
+
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour;
