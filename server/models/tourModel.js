@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const User = require('./userModel');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -106,7 +105,10 @@ const tourSchema = new mongoose.Schema(
       },
     ],
     // Embedding guides
-    guides: Array,
+    // guides: Array,
+
+    // Child Referencing - reference to another model
+    guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
   },
   {
     toJSON: {
@@ -129,11 +131,12 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
-tourSchema.pre('save', async function (next) {
-  const guidesPromises = this.guides.map(async (id) => await User.findById(id));
-  this.guides = await Promise.all(guidesPromises);
-  next();
-});
+// Embedding users to tour - sample
+// tourSchema.pre('save', async function (next) {
+//   const guidesPromises = this.guides.map(async (id) => await User.findById(id));
+//   this.guides = await Promise.all(guidesPromises);
+//   next();
+// });
 
 // tourSchema.pre('save', (next) => {
 //   next();
@@ -153,6 +156,16 @@ tourSchema.pre(/^find/, function (next) {
   this.find({ secretTour: { $ne: true } });
 
   this.start = Date.now();
+  next();
+});
+
+// this will add populate in all the query that starts with find
+tourSchema.pre(/^find/, function (next) {
+  // populating the data inside the reference
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
+  });
   next();
 });
 
