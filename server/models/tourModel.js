@@ -124,6 +124,18 @@ tourSchema.virtual('durationWeeks').get(function () {
   return +(this.duration / 7).toFixed(2);
 });
 
+// Virtual populate -  instead of adding the child reference or adding the entire child
+tourSchema.virtual('reviews', {
+  // model reference
+  ref: 'Review',
+
+  // field of the reference model
+  foreignField: 'tour',
+
+  // it represents where the virtual reference lives in this model.
+  localField: '_id',
+});
+
 /** Pre validation starts here */
 // DOCUMENT MIDDLWARE: runs only before .save() and .create()
 tourSchema.pre('save', function (next) {
