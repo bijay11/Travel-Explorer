@@ -3,7 +3,10 @@ const catchAsyncError = require('../helpers/catchAsyncError');
 const AppError = require('../helpers/appError');
 
 exports.getAllReviews = catchAsyncError(async (req, res, next) => {
-  const reviews = await Review.find().select('-__v');
+  let filter = {};
+  let tour = req.params.tourId;
+  if (tour) filter = { tour };
+  const reviews = await Review.find(filter).select('-__v');
 
   res.status(200).json({
     status: 'success',
