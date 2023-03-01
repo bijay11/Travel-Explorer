@@ -15,7 +15,11 @@ exports.getAllReviews = catchAsyncError(async (req, res, next) => {
 });
 
 exports.createReview = catchAsyncError(async (req, res, next) => {
-  const { review, rating, user, tour } = req.body;
+  let { review, rating, user, tour } = req.body;
+
+  // get these values from middlewares
+  if (!tour) tour = req.params.tourId;
+  if (!user) user = req.user._id;
 
   if (!review || !rating > 0 || !user || !tour)
     return next(
