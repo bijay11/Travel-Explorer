@@ -7,7 +7,7 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Review cannot be empty'],
       trim: true,
-      maxLength: [40, 'A review name must be less or equal to 40 characters'],
+      maxLength: [1000, 'A review name must be less or equal to 40 characters'],
       minLength: [10, 'A review name must be more or equal to 10 characters'],
     },
     rating: {
@@ -43,6 +43,19 @@ const reviewSchema = new mongoose.Schema(
     },
   }
 );
+
+reviewSchema.pre(/^find/, function (next) {
+  // two queries behind the scene.
+  this.populate({
+    path: 'tour',
+    select: 'name',
+  }).populate({
+    path: 'user',
+    select: 'name photo',
+  });
+
+  next();
+});
 
 const Review = mongoose.model('Review', reviewSchema);
 
