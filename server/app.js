@@ -10,6 +10,7 @@ const AppError = require('./helpers/appError');
 const errorController = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
@@ -70,6 +71,7 @@ app.use('/api/v1/tours', tourRouter);
 
 // for /api/v1/users route, apply userRouter middleware
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 // unhandled routes
 app.all('*', (req, res, next) => {
