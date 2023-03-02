@@ -1,4 +1,4 @@
-exports.filter = (ApiModel, reqQuery) => {
+exports.filter = (ApiModel, reqQuery, filterTour) => {
   const queryObj = { ...reqQuery };
   const excludedFields = ['page', 'sort', 'limit', 'fields'];
   excludedFields.forEach((el) => delete queryObj[el]);
@@ -6,6 +6,8 @@ exports.filter = (ApiModel, reqQuery) => {
   let queryStr = JSON.stringify(queryObj);
   queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
   queryStr = JSON.parse(queryStr);
+
+  queryStr = { ...queryStr, ...filterTour };
 
   return ApiModel.find(queryStr);
 };

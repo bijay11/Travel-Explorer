@@ -17,16 +17,6 @@ exports.checkID = (req, res, next, val) => {
   next();
 };
 
-exports.getAllUsers = catchAsyncError(async (req, res, next) => {
-  const users = await User.find();
-
-  res.status(200).json({
-    status: 'success',
-    results: users.length,
-    data: { users },
-  });
-});
-
 exports.updateMe = catchAsyncError(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(new AppError('You cannot update password here.', 400));
@@ -61,6 +51,7 @@ exports.deleteMe = catchAsyncError(async (req, res, next) => {
   });
 });
 
+exports.getAllUsers = factory.getAll(User);
 exports.getUser = factory.getOne(User);
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);

@@ -1,7 +1,5 @@
 const Tour = require('../models/tourModel');
-const apiFilters = require('../helpers/apiFeatures');
 const catchAsyncError = require('../helpers/catchAsyncError');
-const AppError = require('../helpers/appError');
 const factory = require('./handlerFactory');
 
 exports.aliasTopTours = async (req, res, next) => {
@@ -11,31 +9,7 @@ exports.aliasTopTours = async (req, res, next) => {
   next();
 };
 
-exports.getAllTours = catchAsyncError(async (req, res, next) => {
-  // Filter the Query
-  const { filter, sortData, paginateData, limitByFields } = apiFilters;
-
-  let query = filter(Tour, req.query);
-
-  // Sort the data
-  query = sortData(query, req.query.sort);
-
-  // limit By Fields
-  query = limitByFields(query, req.query.fields);
-
-  // Paginate the data
-  query = paginateData(query, req.query.page, req.query.limit);
-
-  const tours = await query;
-
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    // envelop the data we want to send with data property.
-    data: { tours },
-  });
-});
-
+exports.getAllTours = factory.getAll(Tour);
 exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 exports.createTour = factory.createOne(Tour);
 exports.updateTour = factory.updateOne(Tour);

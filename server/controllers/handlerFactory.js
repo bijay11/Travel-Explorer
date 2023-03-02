@@ -1,5 +1,6 @@
 const catchAsyncError = require('../helpers/catchAsyncError');
 const AppError = require('../helpers/appError');
+const apiFilters = require('../helpers/apiFeatures');
 
 exports.deleteOne = (Model) =>
   catchAsyncError(async (req, res, next) => {
@@ -65,5 +66,30 @@ exports.getOne = (Model, populateOptions) =>
       data: {
         document,
       },
+    });
+  });
+
+exports.getAll = (Model) =>
+  catchAsyncError(async (req, res, next) => {
+    // To allow nested reviews on tour
+    let filterTour = {};
+    let tour = req.params.tourId;
+    if (tour) filterTour = { tour };
+
+    // Filter the Query
+    const { filter, sortData, paginateData, limitByFields } = apiFilters;
+    let query = filter(Model, req.query, filterTour);
+    // Sort the data
+    query = sortData(query, req.query.sort);
+    // limit By Fields
+    query = limitByFields(query, req.query.fields);
+    // Paginate the data
+    query = paginateData(query, req.query.page, req.query.limit);
+    const documents = await query;
+    res.status(200).json({
+      status: 'success',
+      results: documents.length,
+      // envelop the data we want to send with data property.
+      data: { documents },
     });
   });
