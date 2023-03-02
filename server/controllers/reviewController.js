@@ -1,6 +1,6 @@
 const Review = require('../models/reviewModel');
 const catchAsyncError = require('../helpers/catchAsyncError');
-const AppError = require('../helpers/appError');
+const factory = require('./handlerFactory');
 
 exports.getAllReviews = catchAsyncError(async (req, res, next) => {
   let filter = {};
@@ -17,39 +17,18 @@ exports.getAllReviews = catchAsyncError(async (req, res, next) => {
   });
 });
 
-exports.createReview = catchAsyncError(async (req, res, next) => {
-  let { review, rating, user, tour } = req.body;
+exports.setTourUserIds = (req, res, next) => {
+  // Allow nested routes
 
-  // get these values from middlewares
-  if (!tour) tour = req.params.tourId;
-  if (!user) user = req.user._id;
+  let { tour, user } = req.body;
+  if (!tour) req.body.tour = req.params.tourId;
+  if (!user) req.body.user = req.user._id;
 
-  if (!review || !rating > 0 || !user || !tour)
-    return next(
-      new AppError('You must enter review rating user and tour', 400)
-    );
+  next();
+};
 
-  const newReview = await Review.create({
-    review,
-    rating,
-    user,
-    tour,
-  });
+exports.createReview = factory.createOne(Review);
 
-  res.status(201).json({
-    status: 'success',
-    data: {
-      review: newReview,
-    },
-  });
-});
+exports.updateReview = factory.updateOne(Review);
 
-exports.deleteReview = catchAsyncError(async (req, res, next) => {
-  const deleteReview = req.params.id;
-  await Review.findByIdAndDelete(deleteReview);
-
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
-});
+exports.deleteReview = factory.deleteOne(Review);
