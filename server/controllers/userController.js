@@ -17,6 +17,10 @@ exports.checkID = (req, res, next, val) => {
   next();
 };
 
+exports.getMe = (req, res, next) => {
+  console.log('test req. params', req.params.id);
+  next();
+};
 exports.updateMe = catchAsyncError(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(new AppError('You cannot update password here.', 400));
