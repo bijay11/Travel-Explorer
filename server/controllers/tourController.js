@@ -36,27 +36,9 @@ exports.getAllTours = catchAsyncError(async (req, res, next) => {
   });
 });
 
-exports.getTour = catchAsyncError(async (req, res, next) => {
-  const tourId = req.params.id;
-  const tour = await Tour.findById(tourId).populate('reviews');
-  // This below will provide the foundTour inside array
-  // const tour = await Tour.find({ _id: tourId });
-
-  // if argument is provided in next function, express assumes it as error.
-  if (!tour) return next(new AppError('No tour found with provided ID', 404));
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-});
-
+exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 exports.createTour = factory.createOne(Tour);
-
 exports.updateTour = factory.updateOne(Tour);
-
 exports.deleteTour = factory.deleteOne(Tour);
 
 exports.getTourStats = catchAsyncError(async (req, res, next) => {

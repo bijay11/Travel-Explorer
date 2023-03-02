@@ -43,3 +43,27 @@ exports.createOne = (Model) =>
       },
     });
   });
+
+exports.getOne = (Model, populateOptions) =>
+  catchAsyncError(async (req, res, next) => {
+    const documentId = req.params.id;
+
+    let query = Model.findById(documentId);
+    if (populateOptions) query = query.populate(populateOptions);
+
+    const document = await query;
+
+    // This below will provide the found document inside array
+    // const document = await Model.find({ _id: documentId });
+
+    // if argument is provided in next function, express assumes it as error.
+    if (!document)
+      return next(new AppError('No document found with provided ID', 404));
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        document,
+      },
+    });
+  });
