@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Tour = require('./tourModel');
+
 // review // rating / createdAt / ref to tour / ref to user
 
 const reviewSchema = new mongoose.Schema(
@@ -54,6 +56,39 @@ reviewSchema.pre(/^find/, function (next) {
   next();
 });
 
+// used statics method aggregate method on model
+reviewSchema.statics.calcAverageRatings = async function (tourId) {
+  const [{ nRating, avgRating }] = await this.aggregate([
+    { $match: { tour: tourId } },
+
+    // group by the tour
+    {
+      $group: {
+        _id: '$tour',
+        nRating: { $sum: 1 },
+        avgRating: { $avg: '$rating' },
+      },
+    },
+  ]);
+
+  await Tour.findByIdAndUpdate(tourId, {
+    ratingsQuantity: nRating,
+    ratingsAverage: avgRating,
+  });
+};
+
+// use post to calculate the average
+reviewSchema.post('save', function () {
+  // We cannot use Review.calcAverageRatings since Review is decalred beneath this
+  // if we move this pre after Review is declared then this middleware will not run
+  //
+  // use constructor instead,
+  // it is the model who created the document.
+  this.constructor.calcAverageRatings(this.tour);
+
+  // no next call since its a post "save" middleware
+  // next();
+});
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
