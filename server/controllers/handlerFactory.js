@@ -85,6 +85,8 @@ exports.getAll = (Model) =>
     query = limitByFields(query, req.query.fields);
     // Paginate the data
     query = paginateData(query, req.query.page, req.query.limit);
+
+    // use .explain() to get more info on the query
     const documents = await query;
     res.status(200).json({
       status: 'success',
