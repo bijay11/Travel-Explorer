@@ -13,6 +13,21 @@ module.exports = {
         exclude: /node_modules/,
         use: [{ loader: "babel-loader" }],
       },
+      {
+        // without this, webpack won't support css files.
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        // out of the box from webpack from v5
+        test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
+        type: "asset/resource",
+      },
+      {
+        // out of the box from webpack from v5
+        test: /\.(woff(2)?|eot|ttf|otf|svg)$/i,
+        type: "asset/inline",
+      },
     ],
   },
   output: {
