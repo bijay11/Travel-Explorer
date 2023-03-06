@@ -1,6 +1,6 @@
-import "./styles.css";
-import Image from "./React-icon.png";
-import { ClickCounter } from "./clickCounter";
+import './styles.css'
+import Image from './React-icon.png'
+import { ClickCounter } from './clickCounter'
 
 export const App = () => (
   <>
@@ -11,4 +11,4 @@ export const App = () => (
     <img src={Image} alt="React Logo" width="300" height="200" />
     <ClickCounter />
   </>
-);
+)
