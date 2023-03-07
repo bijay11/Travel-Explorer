@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Tour = require('./tourModel');
+const AppError = require('../helpers/appError');
 
 // review // rating / createdAt / ref to tour / ref to user
 
@@ -58,7 +59,7 @@ reviewSchema.pre(/^find/, function (next) {
 
 // used statics method aggregate method on model
 reviewSchema.statics.calcAverageRatings = async function (tourId) {
-  const [{ nRating, avgRating }] = await this.aggregate([
+  const stats = await this.aggregate([
     { $match: { tour: tourId } },
 
     // group by the tour
@@ -71,13 +72,23 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
     },
   ]);
 
+  if (stats.length) {
+    const [{ nRating, avgRating }] = stats;
+
+    return await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: nRating,
+      ratingsAverage: avgRating,
+    });
+  }
+
   await Tour.findByIdAndUpdate(tourId, {
-    ratingsQuantity: nRating,
-    ratingsAverage: avgRating,
+    ratingsQuantity: 0,
+    ratingsAverage: 4.5,
   });
 };
 
 // use post to calculate the average
+// the above calcAverageRatings will be used here
 reviewSchema.post('save', function () {
   // We cannot use Review.calcAverageRatings since Review is decalred beneath this
   // if we move this pre after Review is declared then this middleware will not run
@@ -89,6 +100,20 @@ reviewSchema.post('save', function () {
   // no next call since its a post "save" middleware
   // next();
 });
+
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  this.tourReview = await this.clone().findOne();
+
+  if (!this.tourReview)
+    return next(new AppError('No document found with provided ID', 404));
+});
+
+reviewSchema.post(/^findOneAnd/, async function () {
+  //  await this.findOne() doesnt work since the query is already executed on post.
+
+  await this.tourReview.constructor.calcAverageRatings(this.tourReview.tour);
+});
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
