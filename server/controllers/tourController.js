@@ -1,6 +1,7 @@
 const Tour = require('../models/tourModel');
 const catchAsyncError = require('../helpers/catchAsyncError');
 const factory = require('./handlerFactory');
+const AppError = require('../helpers/appError');
 
 exports.aliasTopTours = async (req, res, next) => {
   req.query.limit = '5';
@@ -87,5 +88,33 @@ exports.getMonthyPlan = catchAsyncError(async (req, res, next) => {
     status: 'success',
     results: plan.length,
     data: { plan },
+  });
+});
+
+exports.getToursWithin = catchAsyncError(async (req, res, next) => {
+  const { distance, latlng, unit } = req.params;
+  const [lattitude, longitude] = latlng.split(',');
+
+  if (!lattitude || !longitude) {
+    next(new AppError('Please provide lattitude and longitude.', 404));
+  }
+
+  const earthRadiusInMiles = 3963.2;
+  const earthRadiusInKm = 6378.1;
+  const radianInMiles = distance / earthRadiusInMiles;
+  const radianInKm = distance / earthRadiusInKm;
+
+  const radius = unit === 'mi' ? radianInMiles : radianInKm;
+
+  const tours = await Tour.find({
+    startLocation: {
+      $geoWithin: { $centerSphere: [[longitude, lattitude], radius] },
+    },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    results: tours.length,
+    data: { tours },
   });
 });
