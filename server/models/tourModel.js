@@ -194,12 +194,12 @@ tourSchema.pre(/^find/, function (next) {
 // AGGREGATION MIDDLEWARE
 // we could have added the match to filter out in each route
 // but its better to handle through middleware
-tourSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({
-    $match: { secretTour: { $ne: true } },
-  });
-  next();
-});
+// tourSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({
+//     $match: { secretTour: { $ne: true } },
+//   });
+//   next();
+// });
 
 /** Pre validation ends here */
 

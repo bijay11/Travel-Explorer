@@ -118,3 +118,41 @@ exports.getToursWithin = catchAsyncError(async (req, res, next) => {
     data: { tours },
   });
 });
+
+exports.getDistance = catchAsyncError(async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  const [lattitude, longitude] = latlng.split(',');
+
+  if (!lattitude || !longitude) {
+    next(new AppError('Please provide lattitude and longitude.', 404));
+  }
+  const radiansToKm = 0.001;
+  const radiansToMiles = 0.000621371;
+
+  const distanceMultiplier = unit === 'mi' ? radiansToMiles : radiansToKm;
+
+  const distances = await Tour.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [+lattitude, +longitude],
+        },
+        distanceField: 'distance',
+        distanceMultiplier,
+      },
+    },
+    {
+      $project: {
+        distance: 1,
+        name: 1,
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    // results: distances.length,
+    data: { distances },
+  });
+});
