@@ -79,36 +79,29 @@ exports.getAll = (Model) =>
     // Filter the Query
     const { filter, sortData, paginateData, limitByFields } = apiFilters;
 
-    let query = filter(Model, req.query, filterTour);
-
-    // Sort the data
-    query = sortData(query, req.query.sort);
-
-    // limit By Fields
-    query = limitByFields(query, req.query.fields);
-
-    // Paginate the data
-    query = paginateData(query, req.query.page, req.query.limit);
+    const apply = (fn, ...args) => {
+      // bind in this case will create a new function
+      return fn.bind(null, ...args);
+    };
 
     const pipe =
       (...functions) =>
-      (value) => {
-      //   debugger;
+      (...value) => {
+        //   debugger;
         return functions.reduce((currentValue, currentFunction) => {
-        // debugger;
-          return currentFunction(currentValue);
-        }, value);
+          // debugger;
+          const resFn = currentFunction(...currentValue);
+          return Array.isArray(resFn) ? resFn : [resFn];
+        }, value)[0];
       };
 
-    console.log(
-      'test pipe',
-      pipe(
-        filter,
-        sortData,
-        limitByFields,
-        paginateData
-      )(Model, req.query, filterTour)
-    );
+    const query = pipe(
+      apply(filter, req.query, filterTour),
+      // log.bind(null, 'asdfsaf', 'asdfsa')
+      apply(sortData, req.query.sort),
+      apply(limitByFields, req.query.fields),
+      apply(paginateData, req.query.page, req.query.limit)
+    )(Model);
 
     // use .explain() to get more info on the query
     const documents = await query;

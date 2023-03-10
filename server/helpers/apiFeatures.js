@@ -1,4 +1,4 @@
-exports.filter = (ApiModel, reqQuery, filterTour) => {
+exports.filter = (reqQuery, filterTour, ApiModel) => {
   const queryObj = { ...reqQuery };
   const excludedFields = ['page', 'sort', 'limit', 'fields'];
   excludedFields.forEach((el) => delete queryObj[el]);
@@ -12,7 +12,7 @@ exports.filter = (ApiModel, reqQuery, filterTour) => {
   return ApiModel.find(queryStr);
 };
 
-exports.sortData = (query, reqQuerySort) => {
+exports.sortData = (reqQuerySort, query) => {
   if (reqQuerySort) {
     const sortBy = reqQuerySort.split(',').join(' ');
     return query.sort(sortBy);
@@ -20,13 +20,13 @@ exports.sortData = (query, reqQuerySort) => {
   return query.sort('-createdAt');
 };
 
-exports.limitByFields = (query, reqQueryFields) => {
+exports.limitByFields = (reqQueryFields, query) => {
   if (!reqQueryFields) return query.select('-__v');
   const fields = reqQueryFields.split(',').join(' ');
   return query.select(fields);
 };
 
-exports.paginateData = (query, reqQueryPage = 1, reqQueryLimit = 100) => {
+exports.paginateData = (reqQueryPage = 1, reqQueryLimit = 100, query) => {
   const skip = (reqQueryPage - 1) * reqQueryLimit;
   return query.skip(skip).limit(reqQueryLimit);
 };
