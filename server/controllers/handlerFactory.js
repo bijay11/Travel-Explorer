@@ -78,13 +78,37 @@ exports.getAll = (Model) =>
 
     // Filter the Query
     const { filter, sortData, paginateData, limitByFields } = apiFilters;
+
     let query = filter(Model, req.query, filterTour);
+
     // Sort the data
     query = sortData(query, req.query.sort);
+
     // limit By Fields
     query = limitByFields(query, req.query.fields);
+
     // Paginate the data
     query = paginateData(query, req.query.page, req.query.limit);
+
+    const pipe =
+      (...functions) =>
+      (value) => {
+      //   debugger;
+        return functions.reduce((currentValue, currentFunction) => {
+        // debugger;
+          return currentFunction(currentValue);
+        }, value);
+      };
+
+    console.log(
+      'test pipe',
+      pipe(
+        filter,
+        sortData,
+        limitByFields,
+        paginateData
+      )(Model, req.query, filterTour)
+    );
 
     // use .explain() to get more info on the query
     const documents = await query;
