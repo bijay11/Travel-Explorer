@@ -5,6 +5,7 @@ const helment = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cors = require('cors');
 
 const AppError = require('./helpers/appError');
 const errorController = require('./controllers/errorController');
@@ -16,6 +17,19 @@ const app = express();
 
 // Middlewares start here
 //
+var whitelist = ['http://localhost:3000', 'http://localhost:8000'];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
+app.use(cors());
+
 // set Security HTTP headers
 app.use(helment());
 
