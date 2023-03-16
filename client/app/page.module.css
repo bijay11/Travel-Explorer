@@ -1,8 +1,14 @@
 .main {
   display: flex;
   padding: 1rem;
-  justify-content: flex-end;
 }
+
+.mainHeader {
+  display: flex;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
 .authButtons {
   padding: 10px;
   border-radius: 5px;
@@ -15,6 +21,7 @@
   background-color: #ff5722;
   margin-right: 5px;
 }
+
 .loginBtn {
   background-color: #25922d;
 }

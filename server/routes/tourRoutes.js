@@ -30,8 +30,8 @@ router.route('/distances/:latlng/unit/:unit').get(tourController.getDistance);
 router
   .route('/')
   .get(
-    authController.protect,
-    authController.restrictTo('admin', 'lead-guide'),
+    // authController.protect,
+    // authController.restrictTo('admin', 'lead-guide'),
     tourController.getAllTours
   )
   .post(

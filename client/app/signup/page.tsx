@@ -9,18 +9,21 @@ export default function Signup() {
 
   const signup = async () => {
     try {
-      const data = await fetch("http://localhost:8000/api/v1/users/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: nameRef.current?.value,
-          email: emailRef.current?.value,
-          password: passwordRef.current?.value,
-          passwordConfirm: passwordConfirmRef.current?.value,
-        }),
-      });
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/users/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: nameRef.current?.value,
+            email: emailRef.current?.value,
+            password: passwordRef.current?.value,
+            passwordConfirm: passwordConfirmRef.current?.value,
+          }),
+        }
+      );
     } catch (error) {
       console.error("signup error", error);
     }
