@@ -1,3 +1,11 @@
+import {
+  MdFlagCircle,
+  MdLocationOn,
+  MdCalendarMonth,
+  MdHiking,
+  MdTimelapse,
+  MdGroup,
+} from "react-icons/md";
 import styles from "./panel.module.css";
 
 export function Panel({ document }: any) {
@@ -10,24 +18,44 @@ export function Panel({ document }: any) {
       <h4>{document.name}</h4>
       <div className={styles.bar}></div>
       <p>
-        <span>Location: {document.startLocation.description}</span>
-        Date: {`${month} ${year}`}
+        <span>
+          <MdLocationOn size={28} color="#0099a8" />{" "}
+          {document.startLocation.description}
+        </span>
+        <span>
+          <MdCalendarMonth size={24} color="#0099a8" /> {`${month} ${year}`}
+        </span>
       </p>
 
       <p>
-        <span>Number of stops: {document.locations.length}</span>
-        <span>Group size: {document.maxGroupSize}</span>
+        <span>
+          <MdFlagCircle size={24} color="#0099a8" /> {document.locations.length}{" "}
+          stops
+        </span>
+        <span>
+          <MdGroup size={24} color="#0099a8" /> {document.maxGroupSize} people
+        </span>
       </p>
 
       <p>
-        <span>Difficulty: {document.difficulty}</span>
-        <span>Duration: {document.duration}</span>
+        <span>
+          <MdHiking size={24} color="#0099a8" /> {document.difficulty}
+        </span>
+        <span>
+          <MdTimelapse size={24} color="#0099a8" /> {document.duration} days
+        </span>
       </p>
       <hr className={styles.divider} />
       <div className={styles.detail}>
         <div>
-          <p>Price: {document.price}</p>
-          <p>Average Rating: {document.ratingsAverage}</p>
+          <p>
+            <span>${document.price}</span>
+          </p>
+          <p>
+            <span>
+              {document.ratingsAverage} ratings ({document.ratingsQuantity})
+            </span>
+          </p>
         </div>
         <div>
           <a
