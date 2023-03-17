@@ -42,17 +42,15 @@ export default async function Home() {
             Login
           </Link>
         </div>
-        <ul>
-          {documents.map((document: any) => {
-            console.log("test document", document);
-            return (
-              <li key={document._id}>
-                <Panel document={document} />
-              </li>
-            );
-          })}
-        </ul>
       </div>
+
+      <ul className={styles.panelContainer}>
+        {documents.map((document: any) => (
+          <li key={document._id}>
+            <Panel document={document} />
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }

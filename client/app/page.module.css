@@ -1,5 +1,4 @@
 .main {
-  display: flex;
   padding: 1rem;
 }
 
@@ -7,6 +6,12 @@
   display: flex;
   justify-content: space-between;
   flex-grow: 1;
+  margin: 2rem 1rem 3rem 1rem;
+}
+
+.mainHeader h4 {
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .authButtons {
@@ -24,4 +29,15 @@
 
 .loginBtn {
   background-color: #25922d;
+}
+
+.panelContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.panelContainer li {
+  flex: 32%;
+  margin: 10px;
+  list-style: none;
 }
