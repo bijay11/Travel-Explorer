@@ -1,23 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { Panel } from "./components/Panel";
-
-async function getData() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/tours`
-  );
-  // Recommendation: handle errors
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-}
+import { getAllTours } from "@/fetchData/getAllTours";
+import { GetAllTours } from "./components/GetAllTours/GetAllTours";
 
 export default async function Home() {
-  const tours = await getData();
+  const tours = await getAllTours();
   if (!tours) return null;
 
   const {
@@ -47,7 +35,7 @@ export default async function Home() {
       <ul className={styles.panelContainer}>
         {documents.map((document: any) => (
           <li key={document._id}>
-            <Panel document={document} />
+            <GetAllTours document={document} />
           </li>
         ))}
       </ul>

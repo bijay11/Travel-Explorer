@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   MdFlagCircle,
   MdLocationOn,
@@ -6,9 +7,9 @@ import {
   MdTimelapse,
   MdGroup,
 } from "react-icons/md";
-import styles from "./panel.module.css";
+import styles from "./getAllTours.module.css";
 
-export function Panel({ document }: any) {
+export function GetAllTours({ document }: any) {
   const [, month, , year] = new Date(document.startDates[0])
     .toString()
     .split(" ");
@@ -58,12 +59,7 @@ export function Panel({ document }: any) {
           </p>
         </div>
         <div>
-          <a
-            href={`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/tours/${document._id}`}
-            className={styles.button}
-          >
-            Details
-          </a>
+          <Link href={`/tours/${document._id}`}>Details</Link>
         </div>
       </div>
     </div>
