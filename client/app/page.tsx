@@ -32,6 +32,8 @@ export default async function Home() {
         </div>
       </div>
 
+      <h4 className={styles.heading}>All Tours</h4>
+
       <ul className={styles.panelContainer}>
         {documents.map((document: any) => (
           <li key={document._id}>

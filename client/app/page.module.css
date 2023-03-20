@@ -30,6 +30,15 @@
   background-color: #25922d;
 }
 
+.heading {
+  font-weight: bold;
+  text-align: center;
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+}
+
 .panelContainer {
   display: flex;
   flex-wrap: wrap;
