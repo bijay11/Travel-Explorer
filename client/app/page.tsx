@@ -13,20 +13,14 @@ export default async function Home() {
   } = tours;
 
   return (
-    <main className={styles.main}>
+    <main className="container-fluid">
       <div className={styles.mainHeader}>
         <h4>Travel Explorer</h4>
         <div>
-          <Link
-            href="/signup"
-            className={`${styles.authButtons} ${styles.signUpBtn}`}
-          >
+          <Link href="/signup" className="btn btn-outline-warning m-1">
             Sign Up
           </Link>
-          <Link
-            href="/login"
-            className={`${styles.authButtons} ${styles.loginBtn}`}
-          >
+          <Link href="/login" className="btn btn-outline-info m-1">
             Login
           </Link>
         </div>
@@ -34,13 +28,13 @@ export default async function Home() {
 
       <h4 className={styles.heading}>All Tours</h4>
 
-      <ul className={styles.panelContainer}>
+      <div className="row">
         {documents.map((document: any) => (
-          <li key={document._id}>
+          <div key={document._id} className="col-md-4 mb-4">
             <GetAllTours document={document} />
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </main>
   );
 }

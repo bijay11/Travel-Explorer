@@ -1,5 +1,6 @@
 import { ReactChildrenType } from "./types/common.types";
 import type { Metadata } from "next";
+import "bootstrap/dist/css/bootstrap.css";
 import "./globals.css";
 
 export const metadata: Metadata = {

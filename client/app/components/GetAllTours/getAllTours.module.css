@@ -1,18 +1,5 @@
-.panel {
-  border: 1px solid #bababa;
-  padding: 30px;
-}
-
-.panel h4 {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-.panel p {
+.card p {
   margin-bottom: 20px;
-}
-
-.panel p,
-.detail {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,9 +21,4 @@
   margin: 20px 0;
   border: 0;
   background-color: #0099a8;
-}
-
-.divider {
-  margin: 25px 0px;
-  border-color: #fff;
 }

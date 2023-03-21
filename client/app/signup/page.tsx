@@ -29,20 +29,72 @@ export default function Signup() {
     }
   };
   return (
-    <form>
-      <label>Name</label>
-      <input type="text" placeholder="name@example.com" ref={nameRef} />
+    <div className="container mt-5" style={{ width: "750px" }}>
+      <div className="card">
+        <div className="card-body">
+          <h5>Sign In</h5>
+          <hr />
+          <form>
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-floating mb-3">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="floatingName"
+                    placeholder="John Doe"
+                    ref={nameRef}
+                  />
+                  <label htmlFor="floatingName">Name</label>
+                </div>
 
-      <label>Email address</label>
-      <input type="email" placeholder="name@example.com" ref={emailRef} />
+                <div className="form-floating mb-3">
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="floatingEmail"
+                    placeholder="name@example.com"
+                    ref={emailRef}
+                  />
+                  <label htmlFor="floatingEmail">Email address</label>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-floating mb-3">
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="floatingPassword"
+                    placeholder="Password"
+                    ref={passwordRef}
+                    autoComplete="off"
+                  />
+                  <label htmlFor="floatingPassword">Password</label>
+                </div>
 
-      <label>Password</label>
-      <input type="password" ref={passwordRef} autoComplete="off" />
-
-      <label>Confirm Password</label>
-      <input type="password" ref={passwordConfirmRef} autoComplete="off" />
-
-      <button onClick={signup}>Submit</button>
-    </form>
+                <div className="form-floating mb-3">
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="floatingPasswordConfirm"
+                    placeholder="Password"
+                    ref={passwordConfirmRef}
+                    autoComplete="off"
+                  />
+                  <label htmlFor="floatingPasswordConfirm">
+                    ConfirmPassword
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="text-end">
+              <button type="button" className="btn btn-outline-info">
+                Sign In
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }
