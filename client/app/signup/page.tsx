@@ -47,7 +47,9 @@ export default function Signup() {
                   />
                   <label htmlFor="floatingName">Name</label>
                 </div>
+              </div>
 
+              <div className="col-md-6">
                 <div className="form-floating mb-3">
                   <input
                     type="email"
@@ -71,7 +73,9 @@ export default function Signup() {
                   />
                   <label htmlFor="floatingPassword">Password</label>
                 </div>
-
+              </div>
+              <div className="col-md-6">
+                {" "}
                 <div className="form-floating mb-3">
                   <input
                     type="password"
