@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { getTour } from "@/fetchData/getTour";
 
 type Params = {
@@ -6,6 +7,19 @@ type Params = {
     tourId: string;
   };
 };
+
+export async function generateMetadata({
+  params: { tourId },
+}: Params): Promise<Metadata> {
+  const {
+    data: { document },
+  } = await getTour(tourId);
+
+  return {
+    title: document.name,
+    description: `Details page of ${document.name}`,
+  };
+}
 
 export default async function TourPage({ params: { tourId } }: Params) {
   const {
