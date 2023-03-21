@@ -26,7 +26,7 @@ export default async function Home() {
         </div>
       </div>
 
-      <h4 className={styles.heading}>All Tours</h4>
+      <h4 className={styles.heading}>All Tours ({tours.results})</h4>
 
       <div className="row">
         {documents.map((document: any) => (
